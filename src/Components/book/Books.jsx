@@ -2,8 +2,14 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react'
 import {Row, Col, Card, InputGroup, Button, Form} from 'react-bootstrap'
 import { FaCartPlus } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import { app } from '../../firebaseInit'
+import { getDatabase, ref, set, get } from 'firebase/database'
 
 const Books = () => {
+  const db = getDatabase(app);
+  const navi = useNavigate();
+  const uid=sessionStorage.getItem('uid');
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState('자바');
   const [loading, setLoading] = useState(false);
@@ -30,6 +36,24 @@ const Books = () => {
     callAPI();
   }
 
+  const onClickCart = (book) => {
+    if(uid){
+      if(window.confirm(`${book.title}도서를 장바구니에 넣으실래요?`)){
+        get(ref(db, `cart/${uid}/${book.isbn}`)).then(snapshot=>{
+          if(snapshot.exists()){
+            alert("장바구니에 이미 있습니다.");
+          }else{
+            set(ref(db, `cart/${uid}/${book.isbn}`), {...book});
+            alert("성공!");
+          }
+        });
+      }
+    }else{
+      sessionStorage.setItem('target', '/books');
+      navi('/login')
+    }
+  }
+
   if (loading) return <h1 className='my-5'>로딩중입니다.....</h1>
   return (
     <div>
@@ -50,12 +74,12 @@ const Books = () => {
         {books.map(book=>
           <Col xs={6} md={3} lg={2} className='mb-2'>
             <Card>
-              <Card.Body>
+              <Card.Body className='justify-content-center d-flex'>
                 <img src={book.thumbnail || 'http://via.placeholder.com/120x170'}/>
               </Card.Body>
               <Card.Footer>
                 <div className='ellipsis'>{book.title}</div>
-                <FaCartPlus style={{cursor:'pointer', fontSize:'20px', color:'green'}}/>
+                <FaCartPlus onClick={()=>onClickCart(book)} style={{cursor:'pointer', fontSize:'20px', color:'green'}}/>
               </Card.Footer>
             </Card>
           </Col>)}

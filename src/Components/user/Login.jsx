@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Card, Col, Form, InputGroup, Row } from "react-bootstrap";
-import { app } from "../../firebaseinit";
+import { app } from "../../firebaseInit";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
@@ -30,8 +30,13 @@ const Login = () => {
         .then((success) => {
           alert("로그인 성공!!");
           setLoading(false);
-          sessionStorage.setItem("email", email);
-          navi("/");
+          sessionStorage.setItem('email', email);
+          sessionStorage.setItem('uid', success.user.uid);
+          if(sessionStorage.getItem('target')){
+            navi(sessionStorage.getItem('target'));
+          }else{
+            navi("/");
+          }
         })
         .catch((error) => {
           alert("에러:" + error.message);
