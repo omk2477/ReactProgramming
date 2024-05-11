@@ -8,7 +8,7 @@ const Login = () => {
   const navi = useNavigate();
   const auth = getAuth(app);
   const [form, setForm] = useState({
-    email: "5035als@test.com",
+    email: "blue@test.com",
     password: "12341234",
   });
   const [loading, setLoading] = useState(false);
