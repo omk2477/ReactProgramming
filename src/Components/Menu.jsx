@@ -6,8 +6,11 @@ import React from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import About from "./About";
 import Books from "./book/Books";
+import Local from "./local/Locals";
+import Favorite from "./local/Favorite";
 import Cart from "./book/Cart";
 import Login from "./user/Login";
+import Join from "./user/Join";
 import { onLog } from "firebase/app";
 
 const Menu = () => {
@@ -32,7 +35,13 @@ const Menu = () => {
               navbarScroll
             >
               <Nav.Link href="/books">도서검색</Nav.Link>
-              <Nav.Link href="/cart">장바구니</Nav.Link>
+              <Nav.Link href="/locals">지역검색</Nav.Link>
+              {sessionStorage.getItem('uid') &&
+                <>
+                  <Nav.Link href="/cart">장바구니</Nav.Link>
+                  <Nav.Link href="/favorite">즐겨찾기</Nav.Link>
+                </>
+              }
             </Nav>
             {sessionStorage.getItem("email") ? (
               <Nav>
@@ -62,8 +71,11 @@ const Menu = () => {
       <Routes>
         <Route path="/" element={<About />} />
         <Route path="/books" element={<Books />} />
+        <Route path="/locals" element={<Local />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/favorite" element={<Favorite />} />
+        <Route path="/join" element={<Join />} />
       </Routes>
     </>
   );
