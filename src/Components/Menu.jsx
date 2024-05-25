@@ -12,6 +12,7 @@ import Cart from "./book/Cart";
 import Login from "./user/Login";
 import Join from "./user/Join";
 import { onLog } from "firebase/app";
+import Mypage from "./user/Mypage";
 
 const Menu = () => {
   const navi = useNavigate();
@@ -45,7 +46,7 @@ const Menu = () => {
             </Nav>
             {sessionStorage.getItem("email") ? (
               <Nav>
-                <Nav.Link href="#">{sessionStorage.getItem("email")}</Nav.Link>
+                <Nav.Link href="/mypage">{sessionStorage.getItem("email")}</Nav.Link>
 
                 <Nav.Link href="#" onClick={onLogout}>
                   로그아웃
@@ -76,6 +77,7 @@ const Menu = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/favorite" element={<Favorite />} />
         <Route path="/join" element={<Join />} />
+        <Route path="/mypage" element={<Mypage />} />
       </Routes>
     </>
   );
