@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { app } from '../../firebaseInit'
-import { getFirestore, doc, getDoc } from 'firebase/firestore'
+import { getFirestore, doc, getDoc, deleteDoc } from 'firebase/firestore'
 import { Row, Col, Button, Card } from 'react-bootstrap'
+import Comments from './Comments'
 
 const ReadPage = () => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +24,12 @@ const ReadPage = () => {
     callAPI();
   }, []);
 
+  const onClickDelete = async() => {
+    if(!window.confirm(`${id}번 게시글을 삭제하실래요?`)) return;
+    await deleteDoc(doc(db, `/posts/${id}`))
+    window.location.href='/bbs';
+  }
+
   if(loading) return <div>로딩중</div>
 
   const { email, date, title, contents } = post;
@@ -32,9 +39,9 @@ const ReadPage = () => {
       <Col xs={12} md={10} lg={8}>
         <h1>게시글정보</h1>
         {loginEmail === email &&
-          <div className='text-end'>
-            <Button variant='success' size='sm' className='me-2'>수정</Button>
-            <Button variant='danger' size='sm'>삭제</Button>
+          <div className='text-end mb-2'>
+            <Button onClick={()=>window.location.href=`/bbs/update/${id}`} variant='success' size='sm' className='me-2'>수정</Button>
+            <Button onClick={onClickDelete} variant='danger' size='sm'>삭제</Button>
           </div>
         }
         <Card>
@@ -49,6 +56,7 @@ const ReadPage = () => {
           </Card.Body>
         </Card>
       </Col>
+      <Comments/>
     </Row>
   )
 }
